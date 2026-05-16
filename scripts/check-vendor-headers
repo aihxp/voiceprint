@@ -1,0 +1,78 @@
+#!/bin/sh
+# check-vendor-headers - validate every file under vendor/ carries a valid
+# voiceprint sync header. Used by CI (.github/workflows/vendor-sync-check.yml)
+# and runnable locally. Exits non-zero and prints offending paths on any
+# violation.
+#
+# The vendored tree is synced copy, never the source of truth. The header is
+# the contract: it records the true canonical upstream and the source commit
+# so the copy can never silently drift from the skill it claims to run.
+
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+VENDOR="$ROOT/vendor"
+
+fail=0
+
+note_fail() {
+  # $1 = file, $2 = reason
+  printf 'FAIL %s\n     %s\n' "$1" "$2" >&2
+  fail=1
+}
+
+if [ ! -d "$VENDOR" ]; then
+  printf 'FAIL: no vendor/ directory at %s\n' "$VENDOR" >&2
+  printf 'Run scripts/sync-upstream to populate it.\n' >&2
+  exit 1
+fi
+
+# Vendored paths are sync-script controlled and contain no spaces or newlines,
+# so word-splitting find output is safe and keeps the loop in this shell (no
+# pipe subshell, so the fail flag propagates).
+files=$(find "$VENDOR" -type f)
+if [ -z "$files" ]; then
+  printf 'FAIL: vendor/ is empty. Run scripts/sync-upstream to populate it.\n' >&2
+  exit 1
+fi
+
+for f in $files; do
+  hdr=$(head -n 60 "$f")
+
+  printf '%s\n' "$hdr" | grep -qF \
+    'VENDORED FILE - SYNCED COPY, NOT THE SOURCE OF TRUTH' \
+    || note_fail "$f" "missing sentinel line"
+
+  printf '%s\n' "$hdr" | grep -q '^Canonical upstream:' \
+    || note_fail "$f" "missing 'Canonical upstream:' line"
+
+  printf '%s\n' "$hdr" | grep -Eq '^Source commit: [0-9a-f]{7,40}' \
+    || note_fail "$f" "missing or malformed 'Source commit:' line"
+
+  printf '%s\n' "$hdr" | grep -qF \
+    'Synced copy, do not edit here, edit upstream.' \
+    || note_fail "$f" "missing do-not-edit-here / edit-upstream notice"
+
+  printf '%s\n' "$hdr" | grep -Eq '^Last synced: .+ @ [0-9a-f]{7,40}$' \
+    || note_fail "$f" "missing or malformed 'Last synced: ... @ <sha>' stamp"
+
+  # Shared detection criteria are canonical to the humanizer repo, even when
+  # they sit inside the authenticity-check tree to keep its SKILL.md paths
+  # intact. A mis-stamp here is exactly the drift this check exists to catch.
+  case "$(basename "$f")" in
+    tell-patterns.md | do-not-flag.md | voice-matching.md)
+      printf '%s\n' "$hdr" \
+        | grep -q '^Canonical upstream: the `humanizer` repo' \
+        || note_fail "$f" \
+          "shared criteria must name the humanizer repo as canonical upstream"
+      ;;
+  esac
+done
+
+if [ "$fail" -ne 0 ]; then
+  printf '\nvendor-sync-check: FAILED. Re-run scripts/sync-upstream to restamp.\n' >&2
+  exit 1
+fi
+
+printf 'vendor-sync-check: OK. All vendored files carry a valid sync header.\n'
+exit 0

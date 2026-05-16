@@ -1,0 +1,156 @@
+#!/bin/sh
+# sync-upstream - re-pull the vendored skills from their canonical upstream
+# repos and stamp every vendored file with a voiceprint sync header.
+#
+# voiceprint is a thin orchestrator. The vendored tree under vendor/ is synced
+# copy, never the source of truth. The sync is one-directional:
+#
+#   - detection and rewrite criteria are canonical in the humanizer repo
+#       (tell-patterns.md, do-not-flag.md, voice-matching.md, examples.md,
+#        and humanizer's SKILL.md)
+#   - scoring logic is canonical in the authenticity-check repo
+#       (scoring.md, examples.md, and authenticity-check's SKILL.md)
+#
+# The shared detection criteria are re-vendored into the authenticity-check
+# tree as well, so that tree's SKILL.md resolves its own references/ paths
+# unedited. Those copies still name the humanizer repo as canonical upstream.
+#
+# A fix never lands here. It lands upstream in the canonical repo, is
+# committed there, and is then re-synced down with this script. This script
+# refuses to run if an upstream working tree is dirty, so a stamped commit
+# always reproduces the exact vendored bytes.
+#
+# Usage:
+#   scripts/sync-upstream [HUMANIZER_REPO] [AUTHENTICITY_CHECK_REPO]
+#
+# Resolution order for each upstream path: positional argument, then the
+# HUMANIZER_REPO / AUTHENTICITY_CHECK_REPO environment variable, then the
+# sibling-directory default (../humanizer and ../authenticity-check relative
+# to this repo). Set SYNC_DATE to override the stamp date (default: today).
+
+set -eu
+
+ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+PARENT=$(dirname -- "$ROOT")
+
+HZ="${1:-${HUMANIZER_REPO:-$PARENT/humanizer}}"
+AC="${2:-${AUTHENTICITY_CHECK_REPO:-$PARENT/authenticity-check}}"
+SYNC_DATE="${SYNC_DATE:-$(date +%F)}"
+
+die() {
+  printf 'sync-upstream: %s\n' "$1" >&2
+  exit 1
+}
+
+# Verify an upstream is a clean git working tree, then echo its full SHA.
+verify_clean_repo() {
+  # $1 = path, $2 = human-readable label
+  repo="$1"
+  label="$2"
+  [ -d "$repo" ] || die "$label repo not found at: $repo"
+  git -C "$repo" rev-parse --is-inside-work-tree >/dev/null 2>&1 \
+    || die "$label path is not a git repository: $repo"
+  # Only tracked changes (modified/staged/deleted) threaten reproducibility:
+  # the vendored bytes are the tracked manifest at HEAD. Untracked local
+  # scratch (e.g. an agent .claude/ worktree) does not change those bytes, so
+  # -uno keeps the guard precise instead of blocking on unrelated noise.
+  if [ -n "$(git -C "$repo" status --porcelain --untracked-files=no)" ]; then
+    die "$label working tree has uncommitted tracked changes ($repo). Commit or stash upstream first; refusing to vendor unreproducible bytes."
+  fi
+  git -C "$repo" rev-parse HEAD
+}
+
+HZ_SHA=$(verify_clean_repo "$HZ" "humanizer")
+AC_SHA=$(verify_clean_repo "$AC" "authenticity-check")
+HZ_SHORT=$(git -C "$HZ" rev-parse --short HEAD)
+AC_SHORT=$(git -C "$AC" rev-parse --short HEAD)
+
+# emit_header UP_NAME UP_PATH FULL_SHA SHORT_SHA SHARED(0|1)
+# Prints the voiceprint vendor header. All literal text is in single-quoted
+# printf arguments, so backticks and $ are never interpreted by the shell.
+emit_header() {
+  up_name="$1"
+  up_path="$2"
+  full_sha="$3"
+  short_sha="$4"
+  shared="$5"
+
+  printf '%s\n' '<!--'
+  printf '%s\n' '============================================================================='
+  printf '%s\n' 'VENDORED FILE - SYNCED COPY, NOT THE SOURCE OF TRUTH'
+  printf '%s\n' '============================================================================='
+  printf '%s\n' ''
+  printf 'Canonical upstream: the `%s` repo, %s\n' "$up_name" "$up_path"
+  printf '  (github.com/aihxp/%s).\n' "$up_name"
+  printf 'Source commit: %s\n' "$full_sha"
+  printf '%s\n' ''
+  printf '%s\n' 'This is a verbatim synced copy vendored into the `voiceprint` repo, a'
+  printf '%s\n' 'thin orchestrator that runs this skill but does not own it. The canonical'
+  printf 'source of truth is the `%s` repo named above, never this copy.\n' "$up_name"
+  if [ "$shared" -eq 1 ]; then
+    printf '%s\n' ''
+    printf '%s\n' 'This shared detection-criteria file is re-vendored through the'
+    printf '%s\n' 'authenticity-check tree so that tree'\''s SKILL.md resolves its own'
+    printf '%s\n' 'references/ paths unedited. Its canonical upstream is still the humanizer'
+    printf '%s\n' 'repo, not authenticity-check.'
+  fi
+  printf '%s\n' ''
+  printf '%s\n' 'Sync is one-directional. A fix belongs upstream in the canonical repo and'
+  printf '%s\n' 'is then re-synced here with scripts/sync-upstream.'
+  printf '%s\n' ''
+  printf '%s\n' 'Synced copy, do not edit here, edit upstream.'
+  printf '%s\n' ''
+  printf 'Last synced: %s from %s @ %s\n' "$SYNC_DATE" "$up_name" "$short_sha"
+  printf '%s\n' '============================================================================='
+  printf '%s\n' '-->'
+  printf '%s\n' ''
+}
+
+# vendor_file SRC_REPO SRC_REL DEST_REL UP_NAME FULL_SHA SHORT_SHA SHARED(0|1)
+vendor_file() {
+  src_repo="$1"
+  src_rel="$2"
+  dest_rel="$3"
+  up_name="$4"
+  full_sha="$5"
+  short_sha="$6"
+  shared="$7"
+
+  src="$src_repo/$src_rel"
+  dest="$ROOT/$dest_rel"
+  [ -f "$src" ] || die "upstream file missing: $src"
+
+  mkdir -p "$(dirname -- "$dest")"
+  {
+    emit_header "$up_name" "$src_rel" "$full_sha" "$short_sha" "$shared"
+    cat "$src"
+  } > "$dest"
+  printf '  vendored %s  <-  %s @ %s\n' "$dest_rel" "$up_name" "$short_sha"
+}
+
+printf 'sync-upstream: humanizer=%s @ %s\n' "$HZ" "$HZ_SHORT"
+printf 'sync-upstream: authenticity-check=%s @ %s\n' "$AC" "$AC_SHORT"
+printf 'sync-upstream: stamp date=%s\n\n' "$SYNC_DATE"
+
+# Clear and rebuild the vendored tree so a removed-upstream file cannot linger.
+rm -rf "$ROOT/vendor"
+
+# --- humanizer skill (canonical: humanizer) ---------------------------------
+vendor_file "$HZ" "SKILL.md"                    "vendor/humanizer/SKILL.md"                    "humanizer" "$HZ_SHA" "$HZ_SHORT" 0
+vendor_file "$HZ" "references/tell-patterns.md" "vendor/humanizer/references/tell-patterns.md" "humanizer" "$HZ_SHA" "$HZ_SHORT" 0
+vendor_file "$HZ" "references/do-not-flag.md"   "vendor/humanizer/references/do-not-flag.md"   "humanizer" "$HZ_SHA" "$HZ_SHORT" 0
+vendor_file "$HZ" "references/voice-matching.md" "vendor/humanizer/references/voice-matching.md" "humanizer" "$HZ_SHA" "$HZ_SHORT" 0
+vendor_file "$HZ" "references/examples.md"      "vendor/humanizer/references/examples.md"      "humanizer" "$HZ_SHA" "$HZ_SHORT" 0
+
+# --- authenticity-check skill, native files (canonical: authenticity-check) -
+vendor_file "$AC" "SKILL.md"               "vendor/authenticity-check/SKILL.md"               "authenticity-check" "$AC_SHA" "$AC_SHORT" 0
+vendor_file "$AC" "references/scoring.md"  "vendor/authenticity-check/references/scoring.md"  "authenticity-check" "$AC_SHA" "$AC_SHORT" 0
+vendor_file "$AC" "references/examples.md" "vendor/authenticity-check/references/examples.md" "authenticity-check" "$AC_SHA" "$AC_SHORT" 0
+
+# --- shared detection criteria, re-vendored into the authenticity-check tree
+#     (canonical: humanizer; bytes pulled from the humanizer repo) -----------
+vendor_file "$HZ" "references/tell-patterns.md"  "vendor/authenticity-check/references/tell-patterns.md"  "humanizer" "$HZ_SHA" "$HZ_SHORT" 1
+vendor_file "$HZ" "references/do-not-flag.md"    "vendor/authenticity-check/references/do-not-flag.md"    "humanizer" "$HZ_SHA" "$HZ_SHORT" 1
+vendor_file "$HZ" "references/voice-matching.md" "vendor/authenticity-check/references/voice-matching.md" "humanizer" "$HZ_SHA" "$HZ_SHORT" 1
+
+printf '\nsync-upstream: done. Now run scripts/check-vendor-headers and commit vendor/.\n'

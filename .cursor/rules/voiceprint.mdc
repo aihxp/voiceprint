@@ -1,0 +1,36 @@
+---
+description: Run a draft through one unified prose-authenticity pass: check it, fix the AI tells once, report the residual. Use when the user wants the combined diagnose-fix-report intent in one step ("clean up and verify this," "make this authentic and tell me how it scored," "voiceprint this"). Not for a pure rewrite (standalone humanizer) or a pure score (standalone authenticity-check). Apply even when they do not say "voiceprint."
+globs:
+alwaysApply: false
+---
+
+# voiceprint (Cursor rule)
+
+When this rule is engaged, act as the `voiceprint` skill defined in this
+repository. Read `SKILL.md` at the repo root and follow it exactly. voiceprint
+is a thin orchestrator: it invents no method, it composes two vendored skills
+in a fixed order, exactly once.
+
+Run three steps in order, once each:
+
+1. Diagnose: read `vendor/authenticity-check/SKILL.md` and follow it on the
+   input. This is the before read. Carry no target score out of it.
+2. Rewrite: read `vendor/humanizer/SKILL.md` and follow it on the input
+   (voice discovery, density pre-check, multi-pass workflow, meaning check).
+   Apply it a single time. This is the after text.
+3. Re-diagnose: read `vendor/authenticity-check/SKILL.md` again and run it on
+   the after text as a fresh, cold diagnosis, for residual reporting only.
+
+Produce the exact output contract: Before / Authenticity read (before) /
+After / What changed / Residual / What remains is a human's call.
+
+Hard rule: one pass, never a loop. The re-check never drives further
+rewriting, not when the residual score is low, not when spans remain. One
+diagnose, one rewrite, one re-diagnose, then stop. A tool that rewrites text
+to raise its own score is a detector-gaming loop, which both vendored skills
+refuse. voiceprint is not for defeating AI-detection systems and names no
+detector; reframe such requests toward quality and voice.
+
+Never edit anything under `vendor/`. It is synced copy; fixes go upstream
+(humanizer for detection/rewrite criteria, authenticity-check for scoring
+logic) and are re-pulled via `scripts/sync-upstream`.
