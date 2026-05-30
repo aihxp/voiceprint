@@ -5,7 +5,7 @@ VENDORED FILE - SYNCED COPY, NOT THE SOURCE OF TRUTH
 
 Canonical upstream: the `authenticity-check` repo, SKILL.md
   (github.com/aihxp/authenticity-check).
-Source commit: 119f666801b6bacd3e150ffc0597f86b9b7b951a
+Source commit: 71c3ec9b8aa1607b544f4780cef099ffab37e81b
 
 This is a verbatim synced copy vendored into the `voiceprint` repo, a
 thin orchestrator that runs this skill but does not own it. The canonical
@@ -16,7 +16,7 @@ is then re-synced here with scripts/sync-upstream.
 
 Synced copy, do not edit here, edit upstream.
 
-Last synced: 2026-05-16 from authenticity-check @ 119f666
+Last synced: 2026-05-29 from authenticity-check @ 71c3ec9
 =============================================================================
 -->
 
@@ -41,7 +41,7 @@ description: >-
 allowed-tools: Read, Glob, Grep
 compatibility: claude-code, cursor, codex, antigravity, gemini-cli, pi-coder, opencode, copilot, windsurf, cline, continue, zed, aider
 metadata:
-  version: 1.0.0
+  version: 1.1.1
 ---
 
 # Authenticity Check
@@ -139,7 +139,7 @@ guess is instantly correctable.
    the catalog and the internal-consistency heuristics only. Do not invent a
    persona to measure against; an imagined target voice is its own failure.
 
-This discovery is filesystem-generic. It interoperates with Scriven, Pillars,
+This discovery is filesystem-generic. It interoperates with Scriveno, Pillars,
 or any project that keeps a voice file, without depending on any of them, and
 without assuming this skill is the only one installed.
 
@@ -173,17 +173,23 @@ on its own and is always flagged, whatever the overall density, because its
 presence is near-certain confirmation rather than a weak signal.
 
 A second exception overrides density in the other direction, the
-relocated-signature override. If the dead-giveaway count is Low only because
-the vocabulary is clean, yet the text shows uniform rhythm or a templated
-parallel skeleton (the same shape resolved the same way throughout) and
-carries no concrete specificity or human markers (do-not-flag.md Part 2: a
-specific detail or number, a dated reference, mixed feeling, an idiosyncratic
-sentence-length swing, a strong unhedged opinion, trade idiolect), this is a
-relocated signature, not a human-first draft. The slop words being gone is
-the laundering itself, not evidence of a person. Treat scrutiny as at least
-High, do not apply the low-density high-score bias, and carry the finding into
-scoring: per scoring.md, uniform rhythm with no human markers is the Reads
-AI-generated band even when no catalog tell fired.
+relocated-signature override. The trigger: the dead-giveaway count is Low
+only because the vocabulary is clean, yet the text shows uniform rhythm or a
+templated parallel skeleton (the same shape resolved the same way
+throughout) AND carries no concrete specificity or human markers (the
+`do-not-flag.md` Part 2 list: a specific detail or number, a dated reference,
+mixed feeling, an idiosyncratic sentence-length swing, a strong unhedged
+opinion, trade idiolect).
+
+The rationale: this is a relocated signature, not a human-first draft. The
+slop words being gone is the laundering itself, not evidence of a person.
+Clean vocabulary does not buy a uniform, marker-free passage out of the low
+band.
+
+The action: treat scrutiny as at least High, do not apply the low-density
+high-score bias, and carry the finding into scoring. Per `scoring.md`,
+uniform rhythm with no credited human markers is the Reads AI-generated band
+even when no catalog tell fired.
 
 ## The multi-pass diagnostic
 

@@ -3,6 +3,25 @@
 All notable changes to this skill are documented here. This project adheres
 to semantic versioning.
 
+## [1.2.0] - 2026-05-29
+
+### Changed
+
+- Re-synced the vendored skills to their upstream 1.1.1 releases (humanizer
+  @ 17c544e, authenticity-check @ 71c3ec9), refreshing content vendored from
+  the earlier 1.0.0-era commits. Pulls in the upstream 1.1.x work (expanded
+  worked examples, SKILL.md refinements, scoring additions); the vendored
+  frontmatter now reads version 1.1.1. voiceprint adds no method of its own,
+  so this is purely a refresh of the bundled behavior, re-stamped and
+  validated by `scripts/check-vendor-headers`.
+
+### Fixed
+
+- Resolved the `Scriven` -> `Scriveno` naming drift the documentation audit
+  surfaced in `vendor/`. humanizer had already corrected it upstream; a missed
+  occurrence in authenticity-check's `SKILL.md` was fixed upstream and pulled
+  in by this re-sync. No bare `Scriven` remains in `vendor/`.
+
 ## [1.1.1] - 2026-05-29
 
 ### Fixed

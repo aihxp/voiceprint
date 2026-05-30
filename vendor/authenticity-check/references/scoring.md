@@ -5,7 +5,7 @@ VENDORED FILE - SYNCED COPY, NOT THE SOURCE OF TRUTH
 
 Canonical upstream: the `authenticity-check` repo, references/scoring.md
   (github.com/aihxp/authenticity-check).
-Source commit: 119f666801b6bacd3e150ffc0597f86b9b7b951a
+Source commit: 71c3ec9b8aa1607b544f4780cef099ffab37e81b
 
 This is a verbatim synced copy vendored into the `voiceprint` repo, a
 thin orchestrator that runs this skill but does not own it. The canonical
@@ -16,7 +16,7 @@ is then re-synced here with scripts/sync-upstream.
 
 Synced copy, do not edit here, edit upstream.
 
-Last synced: 2026-05-16 from authenticity-check @ 119f666
+Last synced: 2026-05-29 from authenticity-check @ 71c3ec9
 =============================================================================
 -->
 
@@ -61,6 +61,16 @@ variance. Genuine human prose, even when formal and clean, leaves
 fingerprints: a specific, an opinion, an idiosyncratic rhythm. Laundered AI
 prose is clean, even-rhythmed, and marker-free. Decide the band on that test,
 not on how inoffensive the words are.
+
+A precedence note on anaphora. `do-not-flag.md` Part 2 credits deliberate
+repetition for emphasis (a single anaphora) as a human rhetorical choice.
+That credit does not apply when anaphora is the entire structural skeleton
+of a marker-free uniform passage: in that case the repetition is the
+template, not the rhetoric, and the Step 0b relocated-signature override
+governs. Co-occurrence (anaphora plus uniform rhythm plus zero credited
+markers) overrides the lone-anaphora credit. The single-anaphora-in-otherwise-
+varied-prose case still wins for the writer; the anaphora-as-skeleton case
+does not.
 
 ## Part 2: The 0-100 score
 

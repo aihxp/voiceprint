@@ -5,7 +5,7 @@ VENDORED FILE - SYNCED COPY, NOT THE SOURCE OF TRUTH
 
 Canonical upstream: the `humanizer` repo, SKILL.md
   (github.com/aihxp/humanizer).
-Source commit: ddb4b6fb1cba15f5dc3ea4e2c05674e6b6351d55
+Source commit: 17c544e11f4b7795835919dcd840604f1e60d09f
 
 This is a verbatim synced copy vendored into the `voiceprint` repo, a
 thin orchestrator that runs this skill but does not own it. The canonical
@@ -16,7 +16,7 @@ is then re-synced here with scripts/sync-upstream.
 
 Synced copy, do not edit here, edit upstream.
 
-Last synced: 2026-05-16 from humanizer @ ddb4b6f
+Last synced: 2026-05-29 from humanizer @ 17c544e
 =============================================================================
 -->
 
@@ -37,9 +37,9 @@ description: >-
   only says the text feels off, sounds corporate, reads like AI, or is too
   generic, without naming this skill or the word humanize.
 allowed-tools: Read, Write, Edit, Glob, Grep
-compatibility: claude-code, cursor, codex, antigravity, gemini-cli, pi-coder, opencode, copilot
+compatibility: claude-code, cursor, codex, antigravity, gemini-cli, pi-coder, opencode, copilot, windsurf, cline, continue, zed, aider
 metadata:
-  version: 1.0.0
+  version: 1.1.1
 ---
 
 # Humanizer
@@ -99,7 +99,7 @@ guess is instantly correctable.
    varied human prose. Do not invent a persona or a backstory; an invented
    voice is its own failure. Generic mode skips Pass 1 and starts at Pass 2.
 
-This discovery is filesystem-generic. It interoperates with Scriven, Pillars,
+This discovery is filesystem-generic. It interoperates with Scriveno, Pillars,
 or any project that happens to keep a voice file, without depending on any of
 them.
 
@@ -314,4 +314,5 @@ Read these on demand, not upfront:
 - `references/voice-matching.md` whenever Step 0 found a voice. How to extract
   and apply a voice, the optional VOICE.md schema, and conflict resolution.
 - `references/examples.md` when you are unsure what good output looks like.
-  Three full worked runs: generic de-slop, voice-first, and a restraint case.
+  Four full worked runs: generic de-slop, voice-first, a restraint case, and
+  a stance-mode case.

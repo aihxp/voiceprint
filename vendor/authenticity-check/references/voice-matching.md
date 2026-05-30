@@ -5,7 +5,7 @@ VENDORED FILE - SYNCED COPY, NOT THE SOURCE OF TRUTH
 
 Canonical upstream: the `humanizer` repo, references/voice-matching.md
   (github.com/aihxp/humanizer).
-Source commit: ddb4b6fb1cba15f5dc3ea4e2c05674e6b6351d55
+Source commit: 17c544e11f4b7795835919dcd840604f1e60d09f
 
 This is a verbatim synced copy vendored into the `voiceprint` repo, a
 thin orchestrator that runs this skill but does not own it. The canonical
@@ -21,7 +21,7 @@ is then re-synced here with scripts/sync-upstream.
 
 Synced copy, do not edit here, edit upstream.
 
-Last synced: 2026-05-16 from humanizer @ ddb4b6f
+Last synced: 2026-05-29 from humanizer @ 17c544e
 =============================================================================
 -->
 
@@ -81,7 +81,7 @@ phrases.
 ## Part 3: Optional VOICE.md schema (interop convenience, not a requirement)
 
 The skill works with no profile file at all. This schema exists so users (and
-adjacent tools like Scriven STYLE-GUIDE.md or a Pillars AGENTS.md voice
+adjacent tools like Scriveno STYLE-GUIDE.md or a Pillars AGENTS.md voice
 section) can hand the skill a structured profile and get sharper results. If a
 file roughly follows this shape, read it directly; if it does not, fall back
 to Part 2 and read it as prose.
