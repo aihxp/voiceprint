@@ -11,6 +11,10 @@ repository. Read `SKILL.md` at the repo root and follow it exactly. voiceprint
 is a thin orchestrator: it invents no method, it composes two vendored skills
 in a fixed order, exactly once.
 
+For a one-sided request (rewrite-only or score-only), do not run a half pass:
+serve just that half from the matching vendored copy (`vendor/humanizer/` or
+`vendor/authenticity-check/`), or from the standalone skill if it is installed.
+
 Run three steps in order, once each:
 
 1. Diagnose: read `vendor/authenticity-check/SKILL.md` and follow it on the

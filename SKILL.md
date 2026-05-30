@@ -17,7 +17,7 @@ description: >-
 allowed-tools: Read, Write, Edit, Glob, Grep
 compatibility: claude-code, cursor, codex, antigravity, gemini-cli, pi-coder, opencode, copilot
 metadata:
-  version: 1.0.0
+  version: 1.0.1
 ---
 
 # Voiceprint
@@ -45,9 +45,12 @@ Do not use it for a one-sided request. A pure "rewrite this so it sounds
 human," with no interest in a score, is the standalone humanizer skill. A pure
 "is this AI / how human does this read," with no rewrite wanted, is the
 standalone authenticity-check skill. Voiceprint is specifically the union:
-diagnose, fix once, re-read, report. If the user only wants one half, hand the
-request to the right standalone skill instead of running a half-empty pass
-here.
+diagnose, fix once, re-read, report. If the user only wants one half, serve
+just that half and stop: prefer the standalone skill when it is installed, and
+otherwise follow the matching vendored copy directly (`vendor/humanizer/` for a
+rewrite-only request, `vendor/authenticity-check/` for a score-only request).
+Do not run a half-empty voiceprint pass: a rewrite-only request gets no
+authenticity read, and a score-only request gets no rewrite.
 
 ## Core principle: one principled pass, never a loop
 
@@ -143,6 +146,15 @@ The "Residual" and "What remains is a human's call" sections are not
 decoration. They are the forcing functions that make the no-loop rule visible
 to the user and impossible to quietly skip.
 
+This contract supersedes the vendored skills' own output wrappers. Fold
+humanizer's `Voice:` / `Density:` header line into "What changed" rather than
+printing it separately, and do not emit humanizer's standalone "Next step"
+(its offer to write the rewrite into a file) inside the pass; the "After" text
+above is the artifact. If the user gave a file path and wants it persisted,
+offer that once, after the full contract is delivered, never as a silent
+in-place rewrite. That optional, user-initiated write is the only reason this
+skill lists `Write` and `Edit`; the pass itself is otherwise read-only.
+
 ## Scope and intended use
 
 Voiceprint exists to improve prose quality and to help a writer's own work
@@ -179,6 +191,7 @@ by hand is the one move that breaks this product.
 Read these on demand, during the pass, not upfront:
 
 - `vendor/authenticity-check/SKILL.md` in Step 1 and Step 3, with its
-  `references/` (scoring, tell-patterns, do-not-flag, voice-matching).
+  `references/` (scoring, tell-patterns, do-not-flag, voice-matching,
+  examples).
 - `vendor/humanizer/SKILL.md` in Step 2, with its `references/`
   (tell-patterns, do-not-flag, voice-matching, examples).

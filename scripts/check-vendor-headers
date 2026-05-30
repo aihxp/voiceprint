@@ -27,16 +27,18 @@ if [ ! -d "$VENDOR" ]; then
   exit 1
 fi
 
-# Vendored paths are sync-script controlled and contain no spaces or newlines,
-# so word-splitting find output is safe and keeps the loop in this shell (no
-# pipe subshell, so the fail flag propagates).
+# Collect vendored files, then iterate with a while-read loop fed by a here-doc.
+# A here-doc (not a pipe) keeps the loop in this shell, so a fail flag set
+# inside still propagates, while reading whole lines with `read -r` tolerates
+# spaces in a path. Vendored paths never contain newlines (the sync script
+# controls them), the one case a line-based read could not split.
 files=$(find "$VENDOR" -type f)
 if [ -z "$files" ]; then
   printf 'FAIL: vendor/ is empty. Run scripts/sync-upstream to populate it.\n' >&2
   exit 1
 fi
 
-for f in $files; do
+while IFS= read -r f; do
   hdr=$(head -n 60 "$f")
 
   printf '%s\n' "$hdr" | grep -qF \
@@ -67,7 +69,9 @@ for f in $files; do
           "shared criteria must name the humanizer repo as canonical upstream"
       ;;
   esac
-done
+done <<EOF
+$files
+EOF
 
 if [ "$fail" -ne 0 ]; then
   printf '\nvendor-sync-check: FAILED. Re-run scripts/sync-upstream to restamp.\n' >&2

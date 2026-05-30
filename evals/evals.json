@@ -33,22 +33,22 @@
     {
       "id": 3,
       "prompt": "just humanize this paragraph, I don't need a score: [a paragraph that sounds like AI]",
-      "expected_output": "Defer to standalone humanizer; do not run a half-empty voiceprint pass.",
+      "expected_output": "Serve only the rewrite; do not run a half-empty voiceprint pass.",
       "files": [],
       "expectations": [
         "Recognizes this is a pure-rewrite request with no read-back wanted",
-        "Routes to the standalone humanizer skill rather than running voiceprint's diagnose/re-diagnose steps",
+        "Serves only the rewrite (via the standalone humanizer skill if installed, otherwise the vendored humanizer copy), not voiceprint's diagnose/re-diagnose steps",
         "Does not fabricate an authenticity score the user did not ask for"
       ]
     },
     {
       "id": 4,
       "prompt": "is this AI-written? don't change it, just tell me: [a paragraph]",
-      "expected_output": "Defer to standalone authenticity-check; no rewrite occurs.",
+      "expected_output": "Serve only the diagnostic; no rewrite occurs.",
       "files": [],
       "expectations": [
         "Recognizes this is a pure-diagnostic request with no rewrite wanted",
-        "Routes to the standalone authenticity-check skill rather than running voiceprint",
+        "Serves only the diagnostic (via the standalone authenticity-check skill if installed, otherwise the vendored authenticity-check copy), not a voiceprint pass",
         "No rewritten or suggested prose is produced"
       ]
     },

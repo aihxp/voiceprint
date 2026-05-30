@@ -3,6 +3,8 @@ name: vendor-sync-check
 # Fails the build if any file under vendor/ is missing a valid sync header.
 # Vendored content is synced copy, never the source of truth: the header is
 # the contract that records the true canonical upstream and source commit.
+# Also syntax-checks the sync scripts and validates that evals.json parses, so
+# a broken script or malformed eval spec fails the build instead of landing.
 
 on:
   push:
@@ -16,6 +18,12 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Lint shell scripts (syntax only)
+        run: sh -n scripts/sync-upstream && sh -n scripts/check-vendor-headers
+
+      - name: Validate that evals.json parses
+        run: python3 -c "import json; json.load(open('evals/evals.json'))"
 
       - name: Validate vendored sync headers
         run: sh scripts/check-vendor-headers

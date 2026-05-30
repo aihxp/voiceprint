@@ -3,6 +3,37 @@
 All notable changes to this skill are documented here. This project adheres
 to semantic versioning.
 
+## [1.0.1] - 2026-05-29
+
+### Changed
+
+- Clarified one-sided-request handling in `SKILL.md` and every tool adapter: a
+  rewrite-only or score-only request is served as just that half (the
+  standalone skill when installed, otherwise the matching vendored copy under
+  `vendor/`), never a half-empty voiceprint pass. The verification cases for
+  those two requests now assert that observable behavior instead of naming a
+  routing target that may not be installed.
+- Stated that voiceprint's output contract supersedes the vendored skills' own
+  output wrappers: humanizer's `Voice:` / `Density:` header folds into "What
+  changed," and its standalone "Next step" file-write offer is not emitted
+  inside the pass. An optional, user-initiated write of the "After" text is the
+  only reason the skill lists `Write` and `Edit`; the pass is otherwise
+  read-only.
+- Noted in `README.md` that voiceprint ships adapters for the eight tools both
+  upstreams share, and that a vendored skill's own broader `compatibility:`
+  frontmatter is upstream's, synced verbatim, not a voiceprint adapter claim.
+- Added the missing `examples` reference to the authenticity-check entry in the
+  `SKILL.md` reference-file list.
+
+### Tooling
+
+- `scripts/check-vendor-headers` now iterates vendored files with a
+  here-doc-fed `while read` loop, tolerating spaces in a path while keeping the
+  fail flag in the current shell.
+- CI (`vendor-sync-check`) additionally syntax-checks both sync scripts and
+  validates that `evals/evals.json` parses, so a broken script or malformed
+  eval spec fails the build instead of landing silently.
+
 ## [1.0.0] - 2026-05-15
 
 First stable release.

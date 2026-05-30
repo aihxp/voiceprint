@@ -1,6 +1,6 @@
 # voiceprint
 
-![version](https://img.shields.io/badge/version-1.0.0-blue)
+![version](https://img.shields.io/badge/version-1.0.1-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![type](https://img.shields.io/badge/type-thin%20orchestrator-purple)
 ![pass](https://img.shields.io/badge/behavior-one%20pass%2C%20no%20loop-red)
@@ -87,6 +87,13 @@ a human's call, not another automated rewrite.
 
 Every adapter points the agent at the same `SKILL.md` and the same vendored
 skills under `vendor/`, so the one-pass behavior is identical across tools.
+
+voiceprint ships adapters for the eight tools above, the subset both upstream
+skills support in common. A vendored skill's own `compatibility:` frontmatter
+reflects its upstream's support and may list more (authenticity-check names a
+few that voiceprint does not yet adapt); that frontmatter is upstream's, synced
+verbatim, and is not a claim that voiceprint provides an adapter for those
+tools.
 
 ## Usage
 

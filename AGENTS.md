@@ -18,7 +18,10 @@ when they do not say "voiceprint."
 Do not apply it to a one-sided request. A pure rewrite with no read-back is
 the standalone humanizer skill. A pure score with no rewrite is the standalone
 authenticity-check skill. voiceprint is the union of the two, not a substitute
-for either; route half-requests to the right standalone skill.
+for either. Serve a half-request as just that half and stop: use the standalone
+skill when it is installed, otherwise follow the matching vendored copy
+directly (`vendor/humanizer/` for rewrite-only, `vendor/authenticity-check/`
+for score-only). Do not run a half-empty voiceprint pass.
 
 ## How to run it
 

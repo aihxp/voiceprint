@@ -10,7 +10,11 @@ authentic and tell me how it scored, de-slop this then check it, humanize and
 then check, or "voiceprint this"), follow this skill. Apply it even when the
 word "voiceprint" is not used. Do not apply it to a one-sided request: a pure
 rewrite is the standalone humanizer skill, a pure score is the standalone
-authenticity-check skill. voiceprint is the union, not a substitute.
+authenticity-check skill. voiceprint is the union, not a substitute. For a
+half-request, serve only that half and stop: use the standalone skill if
+installed, otherwise follow the matching vendored copy directly
+(`vendor/humanizer/` for rewrite-only, `vendor/authenticity-check/` for
+score-only), never a half-empty voiceprint pass.
 
 Read `SKILL.md` at the repository root and follow it exactly. Run three steps
 in order, once each: (1) diagnose by reading
