@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Lint shell scripts (syntax only)
-        run: sh -n scripts/sync-upstream && sh -n scripts/check-vendor-headers
+        run: sh -n scripts/sync-upstream && sh -n scripts/check-vendor-headers && sh -n scripts/check-upstream-freshness
 
       - name: Validate that evals.json parses
         run: python3 -c "import json; json.load(open('evals/evals.json'))"

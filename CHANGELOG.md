@@ -3,6 +3,19 @@
 All notable changes to this skill are documented here. This project adheres
 to semantic versioning.
 
+## [1.3.0] - 2026-05-29
+
+### Added
+
+- `scripts/check-upstream-freshness` and a scheduled `upstream-freshness`
+  workflow (weekly, plus manual dispatch) that compare each vendored skill's
+  stamped source commit against its canonical upstream's latest commit and fail
+  when a re-sync is due. Closes the gap that let the vendored copies drift a
+  full version behind: the one-directional sync obligation no longer depends on
+  a maintainer remembering to re-pull. The check is read-only (GitHub API via
+  `gh` / `GH_TOKEN`), distinguishes stale (exit 1) from could-not-check
+  (exit 2), and is covered by the existing CI script syntax-lint.
+
 ## [1.2.0] - 2026-05-29
 
 ### Changed

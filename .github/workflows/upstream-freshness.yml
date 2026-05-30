@@ -1,0 +1,29 @@
+name: upstream-freshness
+
+# Warns when a vendored skill has fallen behind its canonical upstream, so the
+# one-directional sync obligation cannot silently lapse (the vendored copies
+# once drifted a full version behind). Scheduled weekly and runnable on demand;
+# it never runs on push or pull_request, so it never blocks normal development.
+# A stale (or unverifiable) result fails the run, which surfaces in the Actions
+# tab and notifies the maintainer; clear it by re-syncing with
+# scripts/sync-upstream.
+
+on:
+  schedule:
+    - cron: "17 9 * * 1"   # Mondays 09:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Compare vendored skills against their upstreams
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: sh scripts/check-upstream-freshness

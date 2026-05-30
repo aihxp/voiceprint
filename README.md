@@ -1,6 +1,6 @@
 # voiceprint
 
-![version](https://img.shields.io/badge/version-1.2.0-blue)
+![version](https://img.shields.io/badge/version-1.3.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![type](https://img.shields.io/badge/type-thin%20orchestrator-purple)
 ![pass](https://img.shields.io/badge/behavior-one%20pass%2C%20no%20loop-red)
@@ -168,7 +168,10 @@ script. It is never hand-copied.
 (`.github/workflows/vendor-sync-check.yml`) and fails the build if any file
 under `vendor/` is missing a valid sync header. Re-syncing is an obligation,
 not an option: when the upstream criteria change, the vendored copies must be
-re-pulled or the product silently disagrees with the skills it advertises.
+re-pulled or the product silently disagrees with the skills it advertises. A
+scheduled `upstream-freshness` workflow (and `scripts/check-upstream-freshness`)
+flags when an upstream has advanced past the vendored copy, so this obligation
+does not depend on remembering.
 
 ## Scope
 
@@ -187,11 +190,12 @@ AGENTS.md                         cross-tool entry point (Codex, Antigravity, Op
 GEMINI.md                         Gemini CLI context
 .cursor/rules/voiceprint.mdc      Cursor project rule
 .github/copilot-instructions.md   GitHub Copilot instructions
-.github/workflows/                CI: sync-header gate + sync-script lint + evals.json parse check
+.github/workflows/                CI: vendor-sync gate (headers, lint, evals) + weekly upstream-freshness check
 vendor/humanizer/                 synced copy of the humanizer skill (canonical: humanizer)
 vendor/authenticity-check/        synced copy of the authenticity-check skill
 scripts/sync-upstream             re-pulls vendored files and stamps headers
 scripts/check-vendor-headers      validates every vendored file has a valid header
+scripts/check-upstream-freshness  flags when a vendored skill is behind its upstream
 evals/evals.json                  verification cases asserting one-pass, no-loop behavior
 ```
 
