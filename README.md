@@ -1,6 +1,6 @@
 # voiceprint
 
-![version](https://img.shields.io/badge/version-1.1.0-blue)
+![version](https://img.shields.io/badge/version-1.1.1-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![type](https://img.shields.io/badge/type-thin%20orchestrator-purple)
 ![pass](https://img.shields.io/badge/behavior-one%20pass%2C%20no%20loop-red)
@@ -90,10 +90,10 @@ skills under `vendor/`, so the one-pass behavior is identical across tools.
 
 voiceprint ships adapters for the eight tools above, the subset both upstream
 skills support in common. A vendored skill's own `compatibility:` frontmatter
-reflects its upstream's support and may list more (authenticity-check names a
-few that voiceprint does not yet adapt); that frontmatter is upstream's, synced
-verbatim, and is not a claim that voiceprint provides an adapter for those
-tools.
+reflects its upstream's support and may list more (authenticity-check also
+names windsurf, cline, continue, zed, and aider, which voiceprint does not
+adapt); that frontmatter is upstream's, synced verbatim, and is not a claim
+that voiceprint provides an adapter for those tools.
 
 ## Usage
 
@@ -187,7 +187,7 @@ AGENTS.md                         cross-tool entry point (Codex, Antigravity, Op
 GEMINI.md                         Gemini CLI context
 .cursor/rules/voiceprint.mdc      Cursor project rule
 .github/copilot-instructions.md   GitHub Copilot instructions
-.github/workflows/                CI: fails if a vendored file lacks a sync header
+.github/workflows/                CI: sync-header gate + sync-script lint + evals.json parse check
 vendor/humanizer/                 synced copy of the humanizer skill (canonical: humanizer)
 vendor/authenticity-check/        synced copy of the authenticity-check skill
 scripts/sync-upstream             re-pulls vendored files and stamps headers

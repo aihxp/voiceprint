@@ -3,6 +3,17 @@
 All notable changes to this skill are documented here. This project adheres
 to semantic versioning.
 
+## [1.1.1] - 2026-05-29
+
+### Fixed
+
+- README Layout: the `.github/workflows/` descriptor now reflects the full CI
+  scope as of 1.1.0 (sync-header gate plus sync-script lint and an evals.json
+  parse check), instead of naming only the sync-header gate.
+- README compatibility note: names the specific tools authenticity-check
+  declares beyond voiceprint's eight-adapter set (windsurf, cline, continue,
+  zed, aider) instead of an imprecise "a few," from a full documentation audit.
+
 ## [1.1.0] - 2026-05-29
 
 ### Changed

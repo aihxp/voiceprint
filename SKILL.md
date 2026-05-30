@@ -17,7 +17,7 @@ description: >-
 allowed-tools: Read, Write, Edit, Glob, Grep
 compatibility: claude-code, cursor, codex, antigravity, gemini-cli, pi-coder, opencode, copilot
 metadata:
-  version: 1.1.0
+  version: 1.1.1
 ---
 
 # Voiceprint
