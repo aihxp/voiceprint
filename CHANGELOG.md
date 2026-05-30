@@ -3,7 +3,7 @@
 All notable changes to this skill are documented here. This project adheres
 to semantic versioning.
 
-## [1.0.1] - 2026-05-29
+## [1.1.0] - 2026-05-29
 
 ### Changed
 
