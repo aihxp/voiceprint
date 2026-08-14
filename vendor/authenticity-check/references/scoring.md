@@ -4,7 +4,7 @@ VENDORED FILE - SYNCED COPY, NOT THE SOURCE OF TRUTH
 =============================================================================
 
 Canonical upstream: the `authenticity-check` repo, references/scoring.md
-  (github.com/aihxp/authenticity-check).
+  (github.com/hannsxpeter/authenticity-check).
 Source commit: 71c3ec9b8aa1607b544f4780cef099ffab37e81b
 
 This is a verbatim synced copy vendored into the `voiceprint` repo, a

@@ -3,6 +3,37 @@
 All notable changes to this skill are documented here. This project adheres
 to semantic versioning.
 
+## [Unreleased]
+
+### Added
+
+- Added a dependency-free deterministic Unicode hygiene stage, inspired by
+  [watermarks-remover](https://github.com/guillaumemeyer/watermarks-remover),
+  at the start of Voiceprint Step 2. The original remains verbatim for
+  `Before` and the before diagnosis; one cleaned working copy reaches the
+  existing single humanizer invocation.
+- Added `scripts/text_hygiene.py` with importable inspection and cleanup APIs,
+  `inspect` and `clean` CLI operations, deterministic code-point manifests,
+  same-family script preservation, Unicode Emoji 17.0 ZWJ pair data, exact
+  UTF-8 output, a 4 MiB input cap, exact unit and CLI fixtures, and CI coverage.
+- Added hygiene behavior evals for positive findings, zero findings,
+  load-bearing Unicode preservation, and detector-framed requests.
+
+### Changed
+
+- The six-section result now reports detected, removed, normalized, and
+  deliberately preserved hygiene counts inside `What changed`. The residual
+  remains report-only and cannot trigger another cleanup or rewrite.
+- Clarified that Unicode cleanup does not establish watermark presence,
+  vendor provenance, or a detector signal. Statistical watermark rewriting,
+  metadata removal, media processing, NFKC normalization, confusable mapping,
+  and detector optimization remain outside Voiceprint's scope.
+- Manifests now report the Python Unicode database version and pinned Emoji
+  ZWJ version. Unknown format controls are preserved conservatively with a
+  reason instead of being removed as a class.
+- The 200 ms p95 release benchmark is opt-in through
+  `VOICEPRINT_RELEASE_BENCHMARK=1`; routine CI remains timing-independent.
+
 ## [1.3.0] - 2026-05-29
 
 ### Added
@@ -106,12 +137,12 @@ First stable release.
   the standalone humanizer skill and pure-score requests to the standalone
   authenticity-check skill.
 - Vendored humanizer skill, synced from the canonical
-  [humanizer](https://github.com/aihxp/humanizer) repo:
+  [humanizer](https://github.com/hannsxpeter/humanizer) repo:
   `vendor/humanizer/SKILL.md` and its `references/` (tell-patterns,
   do-not-flag, voice-matching, examples). Last synced 2026-05-16 from
   humanizer commit `ddb4b6f`.
 - Vendored authenticity-check skill, synced from the canonical
-  [authenticity-check](https://github.com/aihxp/authenticity-check) repo:
+  [authenticity-check](https://github.com/hannsxpeter/authenticity-check) repo:
   `vendor/authenticity-check/SKILL.md` and its native `references/`
   (scoring, examples). Last synced 2026-05-16 from authenticity-check commit
   `119f666`.

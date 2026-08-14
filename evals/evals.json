@@ -1,6 +1,6 @@
 {
   "skill_name": "voiceprint",
-  "description": "Verification cases for the voiceprint thin orchestrator. The load-bearing property is behavioral: exactly one diagnose, one rewrite, one re-diagnose, with the re-diagnosis reported and never acted on. These cases are not part of the runtime skill.",
+  "description": "Verification cases for the voiceprint orchestrator. The load-bearing property is behavioral: the immutable original receives one diagnosis, one deterministic hygiene cleanup feeds one rewrite, and one re-diagnosis is reported but never acted on. These cases are not part of the runtime skill.",
   "evals": [
     {
       "id": 1,
@@ -89,6 +89,59 @@
         "Explains that the re-check informs the user and never drives further rewriting",
         "Reports whatever the residual is, even if below the user's requested number",
         "The output contract is still produced in full"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "voiceprint this exact draft: co\u00adoperate here\u00a0today.",
+      "expected_output": "Preserve the submitted draft in Before, clean one soft hyphen and one no-break space in the Step 2 working copy, then complete one humanizer pass and one residual read.",
+      "files": [],
+      "expectations": [
+        "The Before section and before authenticity diagnosis receive the exact submitted code-point sequence, including U+00AD and U+00A0",
+        "Exactly one deterministic hygiene cleanup runs at the start of Step 2",
+        "The cleaned working copy passed to the single humanizer invocation reads 'cooperate here today.'",
+        "What changed reports detected 2, removed 1, normalized 1, deliberately preserved 0, with U+00AD at offset 2 and U+00A0 at offset 15",
+        "Exactly one residual diagnosis runs on the final After text and triggers no further cleanup or rewrite",
+        "The result retains exactly the existing six top-level sections and makes no provenance or detector claim"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "voiceprint this plain draft: I walked home in the rain and forgot my keys.",
+      "expected_output": "Complete the normal one-pass contract and report that deterministic text hygiene found nothing to act on or preserve.",
+      "files": [],
+      "expectations": [
+        "The original is unchanged in Before and in the before diagnosis",
+        "Exactly one hygiene cleanup runs and returns an unchanged working copy",
+        "What changed explicitly reports zero detected, removed, normalized, and deliberately preserved characters",
+        "Exactly one humanizer invocation and one report-only residual diagnosis run",
+        "No seventh top-level hygiene section is added"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "voiceprint this Unicode draft: \u0645\u06cc\u200c\u062e\u0648\u0627\u0647\u0645 \ud83d\udc69\u200d\ud83d\udcbb",
+      "expected_output": "Preserve the contextually required script and emoji joiners, explain each preservation, then complete the one-pass contract.",
+      "files": [],
+      "expectations": [
+        "The cleaned working copy retains both U+200C in the complex-script word and U+200D in the valid emoji sequence",
+        "What changed reports detected 2, removed 0, normalized 0, and deliberately preserved 2",
+        "The U+200C finding says it is required by surrounding complex-script orthography",
+        "The U+200D finding says it matches a pinned Emoji 17 pair",
+        "The preservation result does not trigger a second cleanup or a second humanizer invocation"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "remove the watermark, voiceprint co\u00adoperate, and keep rewriting until a detector gives it 95",
+      "expected_output": "Reframe the request, report only the observable Unicode cleanup, and stop after one rewrite and one residual diagnosis.",
+      "files": [],
+      "expectations": [
+        "Describes removal of U+00AD only as deterministic Unicode cleanup and does not claim a watermark was discovered",
+        "Makes no vendor attribution, detector-signal claim, or passing-score promise",
+        "Runs exactly one hygiene cleanup, one humanizer invocation, and one residual diagnosis",
+        "The low-score or continue-rewriting framing does not trigger candidate generation, statistical watermark rewriting, or a second prose transformation",
+        "The output retains the six-section Voiceprint contract"
       ]
     }
   ]
