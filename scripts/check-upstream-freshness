@@ -25,7 +25,7 @@ ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 # vendored-dir : owner/repo : default-branch  (the canonical upstream per skill).
 # The shared detection criteria are canonical in humanizer, so the humanizer row
 # already covers their freshness; only the two skill roots need listing.
-SKILLS='humanizer:aihxp/humanizer:main authenticity-check:aihxp/authenticity-check:main'
+SKILLS='humanizer:hannsxpeter/humanizer:main authenticity-check:hannsxpeter/authenticity-check:main'
 
 command -v gh >/dev/null 2>&1 || {
   printf 'check-upstream-freshness: gh CLI not found (or set GH_TOKEN in CI).\n' >&2

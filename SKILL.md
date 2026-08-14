@@ -14,24 +14,28 @@ description: >-
   the standalone humanizer skill) or a pure score with no rewrite (that is the
   standalone authenticity-check skill); voiceprint is the one-pass union of
   the two, not a replacement for either.
-allowed-tools: Read, Write, Edit, Glob, Grep
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 compatibility: claude-code, cursor, codex, antigravity, gemini-cli, pi-coder, opencode, copilot
 metadata:
   version: 1.3.0
 ---
+
+<!-- Implements: P-MUST-01, P-MUST-02, P-MUST-03, P-MUST-04, P-MUST-05, P-MUST-06, P-MUST-07, P-MUST-08, P-MUST-09, P-SHOULD-01 -->
 
 # Voiceprint
 
 One entry point for prose authenticity. The user gives it text and gets back
 a result: the original, a humanized rewrite, an honest read of what still
 looks machine-touched, and a plain statement that the rest is a human's call.
-Voiceprint does not invent a new method. It composes two existing skills that
-already do this well, in a fixed order, exactly once.
+Voiceprint composes two existing prose skills in a fixed order, exactly once.
+It also applies one narrow, deterministic Unicode hygiene operation at the
+start of the existing transformation stage. That local operation cleans the
+working copy without adding another prose rewrite.
 
 The user never invokes humanizer or authenticity-check directly through this
 skill. Voiceprint orchestrates both internally from vendored copies. Those two
 skills remain canonical and independently usable in their own repos; this one
-is a thin orchestrator over them, nothing more.
+keeps their prose methods intact.
 
 ## When to use this
 
@@ -76,22 +80,45 @@ do not repeat a step.
 
 ### Step 1: Diagnose (once)
 
-Read `vendor/authenticity-check/SKILL.md` and follow it exactly on the input
+Capture the submitted text as an immutable original. Read
+`vendor/authenticity-check/SKILL.md` and follow it exactly on that original
 text, including the reference files it points to under
 `vendor/authenticity-check/references/`. Produce its full authenticity report
 (band, score, flagged spans, what reads as human, score basis, caveats). This
-is the **before** read. Carry no target score out of it.
+is the **before** read. The `Before` section must retain the submitted text
+byte-for-byte, and Step 1 must receive the same code-point sequence. Carry no
+target score out of it.
 
-### Step 2: Apply humanizer's fixes (once)
+### Step 2: Clean the working copy and apply humanizer's fixes (once)
 
-Read `vendor/humanizer/SKILL.md` and follow it exactly on the input text,
+At the start of this step, run the immutable original through
+`python3 scripts/text_hygiene.py clean --stats` exactly once, resolving the
+script relative to this `SKILL.md`. Python 3.10 or newer is required. For
+pasted text, prefer the command's standard input and pass the original bytes
+through the host process-input facility. Do not interpolate pasted text into a
+shell command. A user-provided path remains a read-only source.
+
+If the host cannot supply standard input and a temporary file is unavoidable,
+use its secure-temp facility, require owner-only permissions, and guarantee
+cleanup when the command succeeds or fails. Never rewrite the source file in
+place. Standard output is the cleaned working copy; standard error is the
+deterministic JSON manifest. Input is capped at 4 MiB, which comfortably
+exceeds the 100,000-code-point product requirement.
+
+If the helper exits 2 because input is too large, invalid UTF-8, unreadable, or
+cannot be processed or written, stop before humanizer runs. State that the
+original was not changed and do not claim cleanup succeeded.
+
+Pass only the cleaned working copy to one invocation of
+`vendor/humanizer/SKILL.md` and follow it exactly,
 including the reference files under `vendor/humanizer/references/`. Run its
 method as written (voice discovery, density pre-check, the multi-pass
 workflow, the meaning check). Apply it a single time. This produces the
 **after** text. Do not loop the rewrite, and do not let the Step 1 report set
 a goal for it; the rewrite's only job is to apply humanizer's known fixes
 once, faithfully, with humanizer's own restraint and anti-fabrication guards
-intact.
+intact. Do not add candidate generation, statistical watermark rewriting, or
+another cleanup stage.
 
 ### Step 3: Re-diagnose for residual only (once)
 
@@ -128,8 +155,9 @@ reads-as-human, score basis, caveats]
 [the Step 2 humanized text, the primary artifact]
 
 ### What changed
-[humanizer's own "What changed" / "Deliberately left alone" / "Meaning
-check" sections, unaltered]
+[first report text hygiene as detected, removed, normalized, and deliberately
+preserved counts, then include humanizer's own "What changed" / "Deliberately
+left alone" / "Meaning check" sections, unaltered]
 
 ### Residual (after one pass)
 [the Step 3 re-diagnosis: band + score, the spans that still read as
@@ -155,6 +183,14 @@ offer that once, after the full contract is delivered, never as a silent
 in-place rewrite. That optional, user-initiated write is the only reason this
 skill lists `Write` and `Edit`; the pass itself is otherwise read-only.
 
+Inside `What changed`, identify hygiene findings only by their observable
+code point, Unicode name, action, count, and up to 10 zero-based code-point
+offsets. Include the helper's preservation reason for every deliberately
+preserved joiner or selector. If the manifest's findings list is empty, state
+explicitly that detected, removed, normalized, and deliberately preserved
+counts are all zero. These details stay inside `What changed`; do not add a
+seventh top-level section.
+
 ## Scope and intended use
 
 Voiceprint exists to improve prose quality and to help a writer's own work
@@ -169,6 +205,14 @@ framing; offer the quality-and-voice improvement and the honest read instead,
 which is what voiceprint actually does well. This restates the boundary that
 the vendored humanizer and authenticity-check skills already hold; voiceprint
 inherits it without exception.
+
+Text hygiene reports deterministic Unicode observations only. A removed
+control or normalized space does not reveal who created the text, whether a
+watermark was present, or how an external detector will classify the result.
+Do not claim vendor provenance, watermark removal, detector-signal removal, or
+a passing score. The hygiene helper does not inspect file metadata, document
+properties, images, audio, or video, and it does not perform NFKC or confusable
+letter conversion.
 
 ## Composition and sync obligation
 

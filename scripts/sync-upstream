@@ -81,7 +81,7 @@ emit_header() {
   printf '%s\n' '============================================================================='
   printf '%s\n' ''
   printf 'Canonical upstream: the `%s` repo, %s\n' "$up_name" "$up_path"
-  printf '  (github.com/aihxp/%s).\n' "$up_name"
+  printf '  (github.com/hannsxpeter/%s).\n' "$up_name"
   printf 'Source commit: %s\n' "$full_sha"
   printf '%s\n' ''
   printf '%s\n' 'This is a verbatim synced copy vendored into the `voiceprint` repo, a'
