@@ -149,7 +149,21 @@
         "updated": "2026-08-14T14:24:24.332Z"
       },
       "launch": {
-        "status": "pending"
+        "status": "pending",
+        "artifact": "launch/V1.4.0-RELEASE-EVIDENCE.mdx",
+        "artifact-hash": "sha256:c03a15f085244206a285d279c56932131aa412bf6c4336642bdae48e039dd22b",
+        "notes": "Voiceprint v1.4.0 passed local release readiness and the hash-bound prepublication gate. Publication remains pending the merged metadata commit, annotated tag, GitHub release creation, and clean-tag smoke",
+        "readiness-scope": "local-readiness",
+        "verified-target-type": "local",
+        "release-version": "v1.4.0",
+        "release-channel": "github-releases",
+        "publication-state": "not-published",
+        "prepublication-verdict": "pass",
+        "hardening-open-critical": 0,
+        "must-requirements-done": 9,
+        "local-checks": "passed",
+        "external-access-waiting": false,
+        "updated": "2026-08-16T01:29:06.122Z"
       },
       "harden": {
         "status": "done",
