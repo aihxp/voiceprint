@@ -5,6 +5,8 @@ to semantic versioning.
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-08-15
+
 ### Added
 
 - Added a dependency-free deterministic Unicode hygiene stage, inspired by
@@ -33,6 +35,16 @@ to semantic versioning.
   reason instead of being removed as a class.
 - The 200 ms p95 release benchmark is opt-in through
   `VOICEPRINT_RELEASE_BENCHMARK=1`; routine CI remains timing-independent.
+
+### Security
+
+- Restricted path input to unchanged regular, non-symbolic-link files using
+  pre-open and post-open identity checks, no-follow behavior where available,
+  and nonblocking open behavior where available. Symlinks, FIFOs, and
+  check-then-open replacements fail without exposing input or blocking.
+- Narrowed variation-selector and emoji-joiner preservation claims to the
+  evidence the pinned policy actually establishes. The validation workflow
+  now uses read-only repository permissions and immutable action revisions.
 
 ## [1.3.0] - 2026-05-29
 

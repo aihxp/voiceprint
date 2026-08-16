@@ -1,6 +1,6 @@
 # voiceprint
 
-![version](https://img.shields.io/badge/version-1.3.0-blue)
+![version](https://img.shields.io/badge/version-1.4.0-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 ![type](https://img.shields.io/badge/type-thin%20orchestrator-purple)
 ![pass](https://img.shields.io/badge/behavior-one%20pass%2C%20no%20loop-red)

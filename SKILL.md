@@ -17,7 +17,7 @@ description: >-
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 compatibility: claude-code, cursor, codex, antigravity, gemini-cli, pi-coder, opencode, copilot
 metadata:
-  version: 1.3.0
+  version: 1.4.0
 ---
 
 <!-- Implements: P-MUST-01, P-MUST-02, P-MUST-03, P-MUST-04, P-MUST-05, P-MUST-06, P-MUST-07, P-MUST-08, P-MUST-09, P-SHOULD-01 -->
