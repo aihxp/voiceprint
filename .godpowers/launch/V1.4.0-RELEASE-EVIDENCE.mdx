@@ -234,3 +234,20 @@ Change `status` to `done`, `publication-state` to `published`, and `prepublicati
 ## Prepublication readiness verdict
 
 The hardening and requirement gates pass, the release-candidate smoke set passes, and no deploy, observability, URL, OG-card, analytics, or provider access is required. A fresh hash-bound record and check returned `verdict: pass` after the documentation and version edits. The candidate is approved for the GitHub publication sequence, provided `--check` is repeated immediately before each release write.
+
+## Publication receipt
+
+- [DECISION] Publication state: published.
+- [DECISION] Published at: 2026-08-16T01:31:34Z.
+- [DECISION] Release URL: `https://github.com/hannsxpeter/voiceprint/releases/tag/v1.4.0`.
+- [DECISION] Pull request: `https://github.com/hannsxpeter/voiceprint/pull/2`.
+- [DECISION] Release merge commit: `c90bf9b44bc0aeb913f090c744414a661632e670`.
+- [DECISION] Annotated tag: `v1.4.0`, resolving to the release merge commit above.
+- [DECISION] GitHub classification: non-draft, not a prerelease, latest release.
+- [DECISION] CI: both release pull-request checks passed before merge.
+- [DECISION] Published-tag verification: a fresh shallow checkout of `v1.4.0`
+  passed 36 routine tests with the opt-in benchmark skipped as designed,
+  Python compilation, eval JSON parsing, vendor-header validation, exact
+  standard-input cleanup, manifest-count assertions, and version checks.
+- [DECISION] Rollback was not triggered. No publication or smoke failure was
+  observed.

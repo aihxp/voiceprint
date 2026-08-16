@@ -149,21 +149,26 @@
         "updated": "2026-08-14T14:24:24.332Z"
       },
       "launch": {
-        "status": "pending",
+        "status": "done",
         "artifact": "launch/V1.4.0-RELEASE-EVIDENCE.mdx",
-        "artifact-hash": "sha256:c03a15f085244206a285d279c56932131aa412bf6c4336642bdae48e039dd22b",
-        "notes": "Voiceprint v1.4.0 passed local release readiness and the hash-bound prepublication gate. Publication remains pending the merged metadata commit, annotated tag, GitHub release creation, and clean-tag smoke",
+        "artifact-hash": "sha256:50524bc512a7af8edff930609e50483e9cce12d1b2e61db61999102eea62451e",
+        "notes": "Voiceprint v1.4.0 is published through GitHub Releases. The hash-bound gate, pull-request checks, release verification, and clean published-tag smoke all passed",
         "readiness-scope": "local-readiness",
         "verified-target-type": "local",
         "release-version": "v1.4.0",
         "release-channel": "github-releases",
-        "publication-state": "not-published",
+        "publication-state": "published",
         "prepublication-verdict": "pass",
         "hardening-open-critical": 0,
         "must-requirements-done": 9,
         "local-checks": "passed",
         "external-access-waiting": false,
-        "updated": "2026-08-16T01:29:06.122Z"
+        "updated": "2026-08-16T01:32:35.445Z",
+        "release-url": "https://github.com/hannsxpeter/voiceprint/releases/tag/v1.4.0",
+        "release-published-at": "2026-08-16T01:31:34Z",
+        "release-target-commit": "c90bf9b44bc0aeb913f090c744414a661632e670",
+        "release-tag": "v1.4.0",
+        "published-tag-smoke": "passed"
       },
       "harden": {
         "status": "done",

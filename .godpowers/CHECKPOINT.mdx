@@ -1,18 +1,18 @@
 ---
-id: CHECKPOINT-2026-08-14T14-24-24-754Z
+id: CHECKPOINT-2026-08-16T01-33-49-825Z
 project: voiceprint
 mode: B
 mode-d-suite: false
 lifecycle: steady-state-active
 current-tier: tier-3
-current-substep: launch
-progress-pct: 92
-progress-complete: 12
+current-substep: harden
+progress-pct: 100
+progress-complete: 13
 progress-total: 13
-current-step: 12
+current-step: 13
 last-action: gate.pass
 last-actor: system
-last-update: 2026-08-14T14:24:24.754Z
+last-update: 2026-08-16T01:33:49.825Z
 facts-hash: sha256:c56d1d5d28d25f85edbe2cbcd6dcec4bed04cf49cb0981b2e4015bf1dda04687
 ---
 # Checkpoint
@@ -26,9 +26,9 @@ facts-hash: sha256:c56d1d5d28d25f85edbe2cbcd6dcec4bed04cf49cb0981b2e4015bf1dda04
 - Project: **voiceprint**
 - Mode: **B**
 - Lifecycle phase: **steady-state-active**
-- Progress: **92%** (12 of 13 steps complete; current step 12 of 13)
-- Current tier: **tier-3** / **launch**
-- Last action: `gate.pass` by system at 2026-08-14T14:24:24.754Z
+- Progress: **100%** (13 of 13 steps complete; current step 13 of 13)
+- Current tier: **tier-3** / **harden**
+- Last action: `gate.pass` by system at 2026-08-16T01:33:49.825Z
 
 ## What happened recently
 
@@ -37,11 +37,11 @@ facts-hash: sha256:c56d1d5d28d25f85edbe2cbcd6dcec4bed04cf49cb0981b2e4015bf1dda04
 ## What happens next
 
 - /god-status
-- Confirm the disk-derived project state after the text-hygiene completion sync.
+- Confirm the completed v1.4.0 lifecycle and published release state from disk.
 
 ## Next suggested command
 
-`/god-status` - Confirm the disk-derived project state after the text-hygiene completion sync.
+`/god-status` - Confirm the completed v1.4.0 lifecycle and published release state from disk.
 
 ## Last actions (most recent first, max 20)
 
@@ -69,7 +69,7 @@ facts-hash: sha256:c56d1d5d28d25f85edbe2cbcd6dcec4bed04cf49cb0981b2e4015bf1dda04
 
 ## Provenance
 
-- Generated: 2026-08-14T14:24:24.754Z
+- Generated: 2026-08-16T01:33:49.825Z
 - Schema version: 1.0
 - Authoritative state: `.godpowers/state.json`
 - Authoritative history: `.godpowers/runs/<id>/events.jsonl` + `.godpowers/log`
